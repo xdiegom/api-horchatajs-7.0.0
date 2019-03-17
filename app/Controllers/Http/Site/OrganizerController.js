@@ -19,7 +19,15 @@ class OrganizerController {
    * @param {View} ctx.view
    */
   async index({ request, response }) {
-    return response.json(await Organizer.all());
+    const { page } = request.qs;
+
+    if (page) {
+      return response.json(
+        await Organizer.query().paginate(page ? page : 1, 5)
+      );
+    } else {
+      return response.json(await Organizer.all());
+    }
   }
 
   /**
