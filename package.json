@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node ace test"
+    "test": "node ace test",
+    "dev": "nodemon --watch app server.js"
   },
   "keywords": [
     "adonisjs",
@@ -28,7 +29,9 @@
     "moment": "^2.24.0",
     "mysql": "^2.16.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  },
   "autoload": {
     "App": "./app"
   }
