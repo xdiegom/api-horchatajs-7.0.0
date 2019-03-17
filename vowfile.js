@@ -34,7 +34,7 @@ module.exports = (cli, runner) => {
     | Migrate the database before starting the tests.
     |
     */
-    // await ace.call('migration:run', {}, { silent: true })
+    await ace.call('migration:refresh', {}, { silent: true })
   })
 
   runner.after(async () => {
