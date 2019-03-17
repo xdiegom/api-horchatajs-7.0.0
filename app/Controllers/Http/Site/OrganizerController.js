@@ -5,6 +5,8 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Organizer = use('App/Models/Organizer');
+const OrganizerTransformer = use('App/Transformers/OrganizerTransformer');
+
 /**
  * Resourceful controller for interacting with organizers
  */
@@ -13,20 +15,18 @@ class OrganizerController {
    * Show a list of all organizers.
    * GET organizers
    *
-   * @param {object} ctx
    * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Transformer} transform
    */
-  async index({ request, response }) {
+  async index({ request, transform }) {
     const { page } = request.qs;
 
     if (page) {
-      return response.json(
-        await Organizer.query().paginate(page ? page : 1, 5)
-      );
+      const paginated = await Organizer.query().paginate(page, 10);
+      return transform.paginate(paginated, OrganizerTransformer);
     } else {
-      return response.json(await Organizer.all());
+      const organizers = await Organizer.all();
+      return transform.collection(organizers, OrganizerTransformer);
     }
   }
 
@@ -44,13 +44,14 @@ class OrganizerController {
    * Display a single organizer.
    * GET organizers/:id
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {object} params
+   * @param {Transformer} transform
    */
-  async show({ params, request, response }) {
-    return response.json(await Organizer.find(params.id));
+  async show({ params, transform }) {
+    return transform.item(
+      await Organizer.find(params.id),
+      OrganizerTransformer
+    );
   }
 
   /**
