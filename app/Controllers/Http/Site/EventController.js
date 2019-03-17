@@ -5,7 +5,7 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Event = use('App/Models/Event');
-
+const EventTransformer = use('App/Transformers/EventTransformer');
 /**
  * Resourceful controller for interacting with events
  */
@@ -14,17 +14,19 @@ class EventController {
    * Show a list of all events.
    * GET events
    *
-   * @param {object} ctx
    * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
+   * @param {Transformer} transform
    */
-  async index({ request, response }) {
-    const events = await Event.query()
-      .with('organizer')
-      .fetch();
+  async index({ request, transform }) {
+    const { page } = request.qs;
 
-    return response.json(events);
+    if (page) {
+      const paginated = await Event.query().paginate(page, 10);
+      return transform.paginate(paginated, EventTransformer);
+    } else {
+      const events = await Event.all();
+      return transform.collection(events, EventTransformer);
+    }
   }
 
   /**
@@ -41,18 +43,20 @@ class EventController {
    * Display a single event.
    * GET events/:id
    *
+   * @param {Request} ctx.response
    * @param {object} params
-   * @param {Request} ctx.request
+   * @param {Transformer} transform
    */
-  async show({ params, request, response }) {
+  async show({ response, params, transform }) {
     const event = (await Event.query()
       .with('organizer')
       .where('id', params.id)
       .fetch()).first();
 
-    return response.json(event);
+    return event
+      ? transform.item(event, EventTransformer)
+      : response.notFound();
   }
-
 
   /**
    * Update event details.
