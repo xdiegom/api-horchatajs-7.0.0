@@ -44,14 +44,16 @@ class OrganizerController {
    * Display a single organizer.
    * GET organizers/:id
    *
+   * @param {Response} ctx.response
    * @param {object} params
    * @param {Transformer} transform
    */
-  async show({ params, transform }) {
-    return transform.item(
-      await Organizer.find(params.id),
-      OrganizerTransformer
-    );
+  async show({ response, params, transform }) {
+    const organizer = await Organizer.find(params.id);
+    
+    return organizer
+      ? transform.item(organizer, OrganizerTransformer)
+      : response.notFound();
   }
 
   /**

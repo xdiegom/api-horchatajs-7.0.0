@@ -24,12 +24,12 @@ test("it gets paginated organizers if query parameter 'page' is presented in url
   assert,
   client
 }) => {
-  const organizers = await Factory.model('App/Models/Organizer').createMany(6);
+  await Factory.model('App/Models/Organizer').createMany(6);
 
   const response = await client.get('api/site/v1/organizers?page=1').end();
 
   response.assertStatus(200);
-  assert.isArray(response.body.data);
+  assert.hasAnyKeys(response.body, ['pagination', 'data']);
 });
 
 test('it displays a single organizer', async ({ assert, client }) => {
