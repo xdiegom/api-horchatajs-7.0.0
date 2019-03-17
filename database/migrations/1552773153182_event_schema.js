@@ -14,8 +14,10 @@ class EventSchema extends Schema {
         .inTable('organizers');
       table.string('title');
       table.text('description');
-      table.datetime('start_date');
-      table.datetime('end_date');
+      table.date('start_date');
+      table.date('end_date');
+      table.time('start_hour')
+      table.time('end_hour')
 
       table.timestamps();
     })
