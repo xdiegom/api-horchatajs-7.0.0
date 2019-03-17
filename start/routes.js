@@ -18,7 +18,7 @@ const Route = use('Route');
 
 Route.group('site', () => {
   Route.resource('organizers', 'OrganizerController')
-    .only(['index'])
+    .only(['index', 'show'])
     .apiOnly();
 })
   .prefix('api/site/v1')

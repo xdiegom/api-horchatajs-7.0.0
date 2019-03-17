@@ -19,7 +19,7 @@ class OrganizerController {
    * @param {View} ctx.view
    */
   async index({ request, response }) {
-    return await response.json(Organizer.all());
+    return response.json(await Organizer.all());
   }
 
   /**
@@ -41,7 +41,9 @@ class OrganizerController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show({ params, request, response }) {}
+  async show({ params, request, response }) {
+    return response.json(await Organizer.find(params.id));
+  }
 
   /**
    * Update organizer details.
