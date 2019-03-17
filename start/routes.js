@@ -20,6 +20,10 @@ Route.group('site', () => {
   Route.resource('organizers', 'OrganizerController')
     .only(['index', 'show'])
     .apiOnly();
+
+  Route.resource('events', 'EventController')
+    .only(['index', 'show'])
+    .apiOnly();
 })
   .prefix('api/site/v1')
   .namespace('Site');

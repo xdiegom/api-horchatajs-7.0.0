@@ -1,8 +1,10 @@
-'use strict'
+'use strict';
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
+
+const Event = use('App/Models/Event');
 
 /**
  * Resourceful controller for interacting with events
@@ -17,19 +19,12 @@ class EventController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
-  }
+  async index({ request, response }) {
+    const events = await Event.query()
+      .with('organizer')
+      .fetch();
 
-  /**
-   * Render a form to be used for creating a new event.
-   * GET events/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+    return response.json(events);
   }
 
   /**
@@ -40,32 +35,24 @@ class EventController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
-  }
+  async store({ request, response }) {}
 
   /**
    * Display a single event.
    * GET events/:id
    *
-   * @param {object} ctx
+   * @param {object} params
    * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
+  async show({ params, request, response }) {
+    const event = (await Event.query()
+      .with('organizer')
+      .where('id', params.id)
+      .fetch()).first();
+
+    return response.json(event);
   }
 
-  /**
-   * Render a form to update an existing event.
-   * GET events/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
-  }
 
   /**
    * Update event details.
@@ -75,8 +62,7 @@ class EventController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
-  }
+  async update({ params, request, response }) {}
 
   /**
    * Delete a event with id.
@@ -86,8 +72,7 @@ class EventController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
-  }
+  async destroy({ params, request, response }) {}
 }
 
-module.exports = EventController
+module.exports = EventController;
