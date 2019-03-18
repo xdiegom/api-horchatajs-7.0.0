@@ -2,6 +2,8 @@
 
 const TransformerAbstract = use('Adonis/Addons/Bumblebee/TransformerAbstract');
 const EventOrganizerTransformer = use('App/Transformers/EventOrganizerTransformer');
+const moment = require('moment');
+
 /**
  * EventTransformer class
  *
@@ -21,10 +23,10 @@ class EventTransformer extends TransformerAbstract {
       id: model.id,
       title: model.title,
       description: model.description,
-      start_date: model.start_date,
-      end_date: model.end_date,
-      starts_at: model.start_hour,
-      ends_at: model.end_hour
+      start_date: moment(model.start_date).utc().format('DD-MM-YYYY'),
+      end_date: moment(model.end_date).utc().format('DD-MM-YYYY'),
+      starts_at: moment(model.start_hour, "HH:mm").format("hh:mm a"),
+      ends_at: moment(model.end_hour, "HH:mm").format("hh:mm a"),
     };
   }
 
